@@ -10,8 +10,7 @@ Polygon 네트워크의 스마트 컨트랙트와 연동하여 실시간 베스�
 - **UI Components**: shadcn/ui, Radix UI
 - **Web3**: wagmi v2, viem v2, MetaMask 연동
 - **Blockchain**: Polygon (Mainnet/Amoy Testnet)
-- **Database ORM**: TypeORM
-- **Database**: PostgreSQL
+- **Database**: vercel kv
 - **Authentication**: 커스텀 인증 시스템
 
 ## 설정 방법
@@ -85,34 +84,55 @@ src/
 └── migrations/         # 데이터베이스 마이그레이션
 ```
 
-## 개발 정보
+# 어드민 기능 설명
 
-- **Port**: 3000
-- **Database**: vercel kv
+## 용어정리
 
-## 베스팅 컨트랙트 정보
+- 락업 컨트랙트: 블록체인상에 락업 로직이 구현되어 있는 일종의 계약 지갑
+- 수혜자: 락업 해제된 토큰을 수령하는 지갑
 
-### 지원하는 베스팅 컨트랙트
+- 락업: 락업 컨트랙트에 묶여 있는 것
+- 베스팅: 락업 해제 시점이 도래한 것
+- 릴리즈: 베스팅된 토큰을 수혜자에게 전달하는 것
 
-1. **Ecosystem**: 생태계 발전을 위한 토큰
-2. **Foundation**: 재단 운영을 위한 토큰
-3. **Private Investor**: 사모투자자를 위한 토큰
-4. **Team**: 팀 및 개발진을 위한 토큰
-5. **Marketing**: 마케팅 및 홍보를 위한 토큰
-6. **Advisor**: 어드바이저를 위한 토큰
+## 대시보드
 
-### 주요 기능
+### Summary 정보
 
-- 실시간 베스팅 진행률 모니터링
-- 릴리즈 가능한 토큰 자동 계산
-- 컨트랙트별 개별 토큰 릴리즈
-- 네트워크 자동 전환 (Polygon)
-- 주소 복사 및 익스플로러 연결
+![대시보드 스크린샷](public/dashboard-summary1.png)
+![대시보드 스크린샷2](public/dashboard-summary2.png)
 
-## 개발 정보
+- 총 락업 물량: 전체 락업 물량 (10B 고정)
+- 베스팅된 물량: 현재 시점 락업 해제 스케쥴에 도달한 전체 물량
+- 릴리즈 가능한 물량: 베스팅 된 물량 중 아직 릴리즈 되지 않은 물량
+- 릴리즈된 물량: 릴리즈가 완료된 물량
+- 전체 베스팅 진행률: 전체 락업 물량에 대해 베스팅 완료 비율
+- 릴리즈 완료율: 현재 베스팅 완료된 물량에 대해 릴리즈 완료 비율
 
-- **Network**: Polygon (Mainnet/Amoy Testnet)
-- **Frontend**: Next.js 15 + TypeScript + wagmi v2
-- **UI**: Tailwind CSS + Shadcn UI
-- **Database**: PostgreSQL + TypeORM
-- **Web3**: viem v2 + wagmi v2
+### 컨트랙트별 현황
+
+<img src="public/dashboard-contract.png" width="400">
+
+- 컨트랙트 주소, 수혜자 주소 표시 (copy 및 explorer 링크 버튼)
+- 총 할당량: 해당 컨트랙트의 총 락업 물량
+- 락업 해제 현황을 progress 형태로 제공
+- 베스팅된 물량, 릴리즈된 물량, 릴리즈가능 물량 표시
+- 다음 베스팅 일정 및 베스팅 물량 안내
+
+## 토큰 릴리즈
+
+![토큰 스크린샷1](public/token-summary.png)
+<img src="public/token-contract.png" width="400">
+<img src="public/token-network.png" width="400">
+
+- 릴리즈 현황 요약 제공
+- Web3 지갑을 연결하여 릴리즈 수행 가능 (MetaMask 추천)
+- 폴리곤 네트워크로 연결되어 있지 않을 경우 안내 모달 노출 및 원버튼 네트워크 변경 지원
+- 지갑 익스텐션이 설치되어 있지 않을 경우 에러 발생
+- 토큰 릴리즈 버튼 클릭 시 연결되어 있는 Web3 지갑 호출 -> 소량의 Pol을 수수료로 사용하여 릴리즈함수 호출
+
+## 설정
+
+<img src="public/setting.png" width="400">
+
+- 비밀번호 변경 기능
